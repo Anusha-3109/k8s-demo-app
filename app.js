@@ -25,10 +25,11 @@ app.get("/", async (req, res) => {
 
     res.json({
       message: APP_MESSAGE,
-      version: APP_VERSION
+      version: APP_VERSION,
       visits: count,
       hostname: process.env.HOSTNAME || "local",
       port: PORT,
+      status: "healthy",
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
