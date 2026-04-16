@@ -6,7 +6,7 @@ const { MongoClient } = require("mongodb");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const APP_VERSION = process.env.APP_VERSION || "v1.0.1";
+const APP_VERSION = process.env.APP_VERSION || "dev";
 const APP_MESSAGE = process.env.APP_MESSAGE || "Hello from k8s-demo-app";
 const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/demo";
 
@@ -41,6 +41,7 @@ app.get("/health", async (req, res) => {
     if (!db) {
       return res.status(500).send("DB not connected");
     }
+
     await db.command({ ping: 1 });
     res.status(200).send("OK");
   } catch (err) {
