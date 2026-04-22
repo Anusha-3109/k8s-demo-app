@@ -13,9 +13,18 @@ const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/demo";
 let db;
 
 async function connectDB() {
-  const client = new MongoClient(MONGO_URL);
+  const options = {};
+  
+  if (process.env.MONGO_TLS === "true") {
+    options.tls = true;
+    options.tlsAllowInvalidCertificates = true;
+    options.tlsAllowInvalidHostnames = true;
+  }
+
+  const client = new MongoClient(MONGO_URL, options);
   await client.connect();
-  db = client.db("demo");
+
+  db = client.db();
   console.log("Connected to MongoDB");
 }
 

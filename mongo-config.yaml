@@ -4,7 +4,7 @@ metadata:
   name: mongo-config
   namespace: demo-app
 data:
-  MONGO_URL: "mongodb://mongouser:mongopassword@mongo-service:27017/demo?authSource=admin"
+  MONGO_URL: "mongodb://admin:password123@mongo-service:27017/demo?authSource=admin"
   PORT: "3000"
   APP_MESSAGE: "Hello from DB connected app - release 3"
   APP_VERSION: "v1.0.3" 

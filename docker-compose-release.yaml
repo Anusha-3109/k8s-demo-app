@@ -8,7 +8,7 @@ services:
       PORT: 3000
       APP_MESSAGE: "Hello from webapp1"
       APP_VERSION: "v1.0.1"
-      MONGO_URL: mongodb://mongouser:mongopassword@mongo:27017/demo?authSource=admin
+      MONGO_URL: mongodb://admin:password123@mongo:27017/demo?authSource=admin
     ports:
       - "3010:3000"
     depends_on:
@@ -21,7 +21,7 @@ services:
       PORT: 3000
       APP_MESSAGE: "Hello from webapp2"
       APP_VERSION: "v1.0.2"
-      MONGO_URL: mongodb://mongouser:mongopassword@mongo:27017/demo?authSource=admin
+      MONGO_URL: mongodb://admin:password123@mongo:27017/demo?authSource=admin
     ports:
       - "3020:3000"
     depends_on:
@@ -34,7 +34,7 @@ services:
       PORT: 3000
       APP_MESSAGE: "Hello from webapp3"
       APP_VERSION: "v1.0.3"
-      MONGO_URL: mongodb://mongouser:mongopassword@mongo:27017/demo?authSource=admin
+      MONGO_URL: mongodb://admin:password123@mongo:27017/demo?authSource=admin
     ports:
       - "3030:3000"
     depends_on:
@@ -45,8 +45,8 @@ services:
     container_name: mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mongouser
-      MONGO_INITDB_ROOT_PASSWORD: mongopassword
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
     ports:
       - "27017:27017"
     volumes:
