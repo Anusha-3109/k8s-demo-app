@@ -1,13 +1,11 @@
-FROM node:20-alpine
-
+FROM alpine:latest
+ 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-COPY . .
+COPY dist/app /app/app
+RUN chmod +x /app/app
 
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["/app/app"]
