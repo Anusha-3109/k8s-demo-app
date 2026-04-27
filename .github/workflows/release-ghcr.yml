@@ -15,10 +15,10 @@ permissions:
 
 jobs:
   build-and-push:
-     runs-on: ubuntu-latest
-     permissions:
-       packages: write
-       contents: read
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
