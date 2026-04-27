@@ -8,12 +8,11 @@ RUN npm ci
 COPY . .
 RUN npm run build:exe
 
-FROM alpine:latest
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
 COPY --from=builder /app/dist/app /app/app
-RUN chmod +x /app/app
 
 ENV PORT=3000
 EXPOSE 3000
