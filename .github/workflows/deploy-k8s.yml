@@ -1,0 +1,50 @@
+name: Deploy to Kubernetes GHCR
+
+on:
+ workflow_run:
+   workflows: ["Build and Push to GHCR"]
+   types:
+     - completed
+     
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+          kubectl version --client
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Apply Mongo manifest
+        run: |
+          kubectl apply -f mongo-config.yaml
+          kubectl apply -f mongo.secret.example.yaml
+          kubectl apply -f mongo.yaml
+
+      - name: Apply webapp manifest
+        run: |
+          kubectl apply -f webapp-with-probe.yaml
+
+      - name: Update deployment image
+        run: |
+          kubectl -n demo-app set image deployment/webapp-with-probe-deployment \
+            webapp=ghcr.io/${{ github.repository }}:${{ github.event.workflow_run.head_sha }}
+
+      - name: Check rollout status
+        run: |
+          kubectl -n demo-app rollout status deployment/webapp-with-probe-deployment --timeout=180s
+

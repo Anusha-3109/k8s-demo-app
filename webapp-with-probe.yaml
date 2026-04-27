@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-with-probe-deployment
+  namespace: demo-app
+  labels:
+    app: webapp-with-probe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp-with-probe
+  template:
+    metadata:
+      labels:
+        app: webapp-with-probe
+    spec:
+      containers:
+        - name: webapp
+          image: ghcr.io/anusha-3109/k8s-demo-app:v1.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: mongo-config
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-with-probe-service
+  namespace: demo-app
+spec:
+  selector:
+    app: webapp-with-probe
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
